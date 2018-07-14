@@ -27,6 +27,7 @@ const test = ({ serverResponse, clientRequest, encoding = 'utf8' }) => {
           assert(propsContained(serverResponse.headers, proxyRes.headers), 'proxied response headers not passed back')
           assert(resBody === serverResponse.body, 'proxied response body is not passed back')
           assert(proxyRes.statusCode === serverResponse.statusCode, 'statusCode is not equal')
+          assert(proxy.history.length === 1)
           testServer.close()
         })
       })

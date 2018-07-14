@@ -27,6 +27,8 @@ function init ({ target, encoding = 'utf8', closeAfterFirstRequest = false}) {
       clientRes.on('end', () => {
         res.writeHead(clientRes.statusCode, clientRes.headers)
         res.end(resBody)
+        const { statusCode, headers } = clientRes 
+        this.history.push({ statusCode, headers, body: resBody })
         if (closeAfterFirstRequest) {
           server.close()
         }
