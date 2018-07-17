@@ -70,6 +70,7 @@ function init ({ target, encoding = 'utf8', closeAfterFirstRequest = false, webS
         if (closeAfterFirstRequest) {
           server.close()
           wsServer.close()
+          webUiServer.close()
         }
       })
     })
