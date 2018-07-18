@@ -1,4 +1,4 @@
-const socket = new WebSocket('ws://localhost:3030')
+const socket = new WebSocket(`ws://localhost:${webSocketsPort}`)
 
 socket.onopen = () => {
   console.log('socket opened')

@@ -5,7 +5,6 @@ const DevProxy = require('.')
 const test = ({ serverResponse, clientRequest, encoding = 'utf8' }) => {
   const testServer = http.createServer()
   testServer.on('request', (req, res) => {
-    console.log(`${req.method} ${req.url}`)
     assert(propsContained(clientRequest.headers, req.headers), 'request headers not passed to proxied server')
     res.writeHead(serverResponse.statusCode, serverResponse.headers)
     res.end(serverResponse.body)
@@ -18,7 +17,7 @@ const test = ({ serverResponse, clientRequest, encoding = 'utf8' }) => {
       closeAfterFirstRequest: true,
     }).listen(3000)
 
-    proxy.onListening = function () {
+    proxy.eventEmitter.on('listening', function () {
       const proxyRequest = http.request(clientRequest, proxyRes => {
         let resBody = ''
         proxyRes.setEncoding(encoding)
@@ -27,12 +26,11 @@ const test = ({ serverResponse, clientRequest, encoding = 'utf8' }) => {
           assert(propsContained(serverResponse.headers, proxyRes.headers), 'proxied response headers not passed back')
           assert(resBody === serverResponse.body, 'proxied response body is not passed back')
           assert(proxyRes.statusCode === serverResponse.statusCode, 'statusCode is not equal')
-          assert(Array.from(proxy.history).length === 1)
           testServer.close()
         })
       })
       proxyRequest.end()
-    }
+    })
   })
 }
 
